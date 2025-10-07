@@ -1,0 +1,37 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql_mini_dashboard
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: mini_dashboard
+      MYSQL_USER: user
+      MYSQL_PASSWORD: user_password
+    ports:
+      - "3304:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin_mini_dashboard
+    restart: always
+    environment:
+      PMA_HOST: mysql
+      MYSQL_ROOT_PASSWORD: root_password
+    ports:
+      - "8087:80"
+
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: php_mini_dashboard
+    restart: always
+    volumes:
+      - .:/var/www/html
+    ports:
+      - "81:80"
+volumes:
+  mysql_data:
